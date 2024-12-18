@@ -4,34 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SRM Bandwidth Calculator</title>
-  <!-- Bootstrap CDN for styling -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container my-5">
-    <h1 class="text-center mb-4">SRM Bandwidth Calculator</h1>
-    <form id="bandwidthCalculator">
-      <div class="form-group">
-        <label for="numVMs">Total Number of VMs to be Replicated</label>
-        <input type="number" class="form-control" id="numVMs" placeholder="Enter number of VMs" required>
+    <div class="row">
+      <!-- Left: Input Form -->
+      <div class="col-md-6">
+        <h1 class="text-center mb-4">SRM Bandwidth Calculator</h1>
+        <form id="bandwidthCalculator">
+          <div class="form-group">
+            <label for="numVMs">Total Number of VMs</label>
+            <input type="number" class="form-control" id="numVMs" placeholder="200" required>
+          </div>
+          <div class="form-group">
+            <label for="numDisks">Average Number of Virtual Disks per VM</label>
+            <input type="number" class="form-control" id="numDisks" placeholder="1" required>
+          </div>
+          <div class="form-group">
+            <label for="diskSize">Average Size of Virtual Disks (GB)</label>
+            <input type="number" class="form-control" id="diskSize" placeholder="72" required>
+          </div>
+          <div class="form-group">
+            <label for="capacityUtilization">Capacity Utilization (%)</label>
+            <input type="number" class="form-control" id="capacityUtilization" placeholder="70" required>
+          </div>
+          <div class="form-group">
+            <label for="compression">Replication Compression Enabled?</label>
+            <select class="form-control" id="compression">
+              <option value="No">No</option>
+              <option value="Yes">Yes</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="dailyChangeRate">Daily Data Change Rate (%)</label>
+            <input type="number" class="form-control" id="dailyChangeRate" placeholder="3" required>
+          </div>
+          <div class="form-group">
+            <label for="burstChangeRate">Largest Data Burst (%)</label>
+            <input type="number" class="form-control" id="burstChangeRate" placeholder="25" required>
+          </div>
+          <div class="form-group">
+            <label for="rpo">RPO (Recovery Point Objective) in Minutes</label>
+            <input type="number" class="form-control" id="rpo" placeholder="240" required>
+          </div>
+          <button type="button" class="btn btn-primary btn-block" onclick="calculateBandwidth()">Calculate</button>
+        </form>
       </div>
-      <div class="form-group">
-        <label for="diskSize">Average Size of Virtual Disks (GB)</label>
-        <input type="number" class="form-control" id="diskSize" placeholder="Enter average disk size" required>
+
+      <!-- Right: Output Chart -->
+      <div class="col-md-6 d-flex justify-content-center align-items-center">
+        <div>
+          <canvas id="bandwidthChart" width="300" height="300"></canvas>
+          <p class="text-center mt-3" id="bandwidthOutput">Recommended Bandwidth: <strong>-- Mbps</strong></p>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="changeRate">Daily Data Change Rate (%)</label>
-        <input type="number" class="form-control" id="changeRate" placeholder="Enter change rate" required>
-      </div>
-      <div class="form-group">
-        <label for="rpo">Recovery Point Objective (RPO) in Minutes</label>
-        <input type="number" class="form-control" id="rpo" placeholder="Enter RPO (minutes)" required>
-      </div>
-      <button type="button" class="btn btn-primary btn-block" onclick="calculateBandwidth()">Calculate Bandwidth</button>
-    </form>
-    <div class="result mt-4 text-center" id="result">
-      <!-- Result will be displayed here -->
     </div>
   </div>
 
