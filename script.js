@@ -1,5 +1,5 @@
-document.addEventListener("DOMContentLoaded", function() {
-  let chartInstance = null;
+document.addEventListener("DOMContentLoaded", function () {
+  let chartInstance = null; // Track the current chart instance
 
   function calculateBandwidth() {
     // Input values
@@ -13,8 +13,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const rpo = parseFloat(document.getElementById("rpo").value);
 
     // Validate input
-    if (isNaN(numVMs) || isNaN(numDisks) || isNaN(diskSize) || isNaN(capacityUtilization) ||
-        isNaN(dailyChangeRate) || isNaN(burstChangeRate) || isNaN(rpo)) {
+    if (
+      isNaN(numVMs) || isNaN(numDisks) || isNaN(diskSize) || isNaN(capacityUtilization) ||
+      isNaN(dailyChangeRate) || isNaN(burstChangeRate) || isNaN(rpo)
+    ) {
       alert("Please fill all inputs correctly!");
       return;
     }
@@ -37,38 +39,42 @@ document.addEventListener("DOMContentLoaded", function() {
     const dataPerRPO = (adjustedDailyChange / 24 / 60) * rpo + adjustedBurstChange;
     const requiredBandwidth = (dataPerRPO * 8) / (rpo * 60); // Convert to Mbps
 
-    // Update chart
+    // Update chart and output
     updateChart(requiredBandwidth);
-
-    // Display bandwidth
-    document.getElementById("bandwidthOutput").innerHTML =
-      `Recommended Bandwidth: <strong>${requiredBandwidth.toFixed(2)} Mbps</strong>`;
+    displayBandwidthOutput(requiredBandwidth);
   }
 
   function updateChart(bandwidth) {
     const ctx = document.getElementById("bandwidthChart").getContext("2d");
 
+    // Destroy previous chart instance if it exists
     if (chartInstance) {
-      chartInstance.destroy(); // Destroy the old chart instance
+      chartInstance.destroy();
     }
 
+    // Create new chart
     chartInstance = new Chart(ctx, {
       type: "doughnut",
       data: {
         datasets: [{
-          data: [bandwidth, 100 - bandwidth], // Show bandwidth and remaining
-          backgroundColor: ["#4CAF50", "#E0E0E0"], // Green for bandwidth
+          data: [bandwidth, 100 - bandwidth], // Represent bandwidth and unused space
+          backgroundColor: ["#4CAF50", "#E0E0E0"], // Green for bandwidth, gray for unused
         }],
         labels: ["Bandwidth (Mbps)", "Remaining"]
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutoutPercentage: 80,
+        responsive: false, // Disable responsive resizing
+        maintainAspectRatio: false, // Allow custom dimensions
+        cutoutPercentage: 80, // Control doughnut hole size
         tooltips: {
           callbacks: {
-            label: function(tooltipItem, data) {
-              return data.labels[tooltipItem.index] + ": " + data.datasets[0].data[tooltipItem.index].toFixed(2) + " Mbps";
+            label: function (tooltipItem, data) {
+              return (
+                data.labels[tooltipItem.index] +
+                ": " +
+                data.datasets[0].data[tooltipItem.index].toFixed(2) +
+                " Mbps"
+              );
             }
           }
         }
@@ -76,6 +82,11 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
+  function displayBandwidthOutput(bandwidth) {
+    document.getElementById("bandwidthOutput").innerHTML =
+      `Recommended Bandwidth: <strong>${bandwidth.toFixed(2)} Mbps</strong>`;
+  }
+
   // Attach the function to the button click
-  document.querySelector('button').addEventListener('click', calculateBandwidth);
+  document.querySelector("button").addEventListener("click", calculateBandwidth);
 });
