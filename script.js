@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-  let chartInstance = null; // Track the current chart instance
+  let chartInstance = null;
 
   function calculateBandwidth() {
-    // Input values
+    // Retrieve input values
     const numVMs = parseFloat(document.getElementById("numVMs").value);
     const numDisks = parseFloat(document.getElementById("numDisks").value);
     const diskSize = parseFloat(document.getElementById("diskSize").value);
@@ -12,81 +12,48 @@ document.addEventListener("DOMContentLoaded", function () {
     const burstChangeRate = parseFloat(document.getElementById("burstChangeRate").value) / 100;
     const rpo = parseFloat(document.getElementById("rpo").value);
 
-    // Validate input
-    if (
-      isNaN(numVMs) || isNaN(numDisks) || isNaN(diskSize) || isNaN(capacityUtilization) ||
-      isNaN(dailyChangeRate) || isNaN(burstChangeRate) || isNaN(rpo)
-    ) {
-      alert("Please fill all inputs correctly!");
+    if (isNaN(numVMs) || isNaN(numDisks) || isNaN(diskSize) || isNaN(capacityUtilization)
+      || isNaN(dailyChangeRate) || isNaN(burstChangeRate) || isNaN(rpo)) {
+      alert("Please fill in all fields correctly.");
       return;
     }
 
-    // Step 1: Total data to be replicated
+    // Calculation logic
     const totalData = numVMs * numDisks * diskSize * capacityUtilization;
-
-    // Step 2: Daily data change (GB)
     const dailyChange = totalData * dailyChangeRate;
-
-    // Step 3: Burst change adjustment
     const burstChange = totalData * burstChangeRate;
+    const compressionFactor = compression === "Yes" ? 0.5 : 1;
+    const dataPerRPO = ((dailyChange / 24 / 60) * rpo + burstChange) * compressionFactor;
+    const requiredBandwidth = (dataPerRPO * 8) / (rpo * 60);
 
-    // Step 4: Compression adjustment
-    const compressionFactor = compression === "Yes" ? 0.5 : 1.0; // Assume 50% reduction
-    const adjustedDailyChange = dailyChange * compressionFactor;
-    const adjustedBurstChange = burstChange * compressionFactor;
+    // Update output
+    document.getElementById("bandwidthOutput").innerHTML = `Recommended Bandwidth: <strong>${requiredBandwidth.toFixed(2)} Mbps</strong>`;
 
-    // Step 5: Data per RPO and bandwidth
-    const dataPerRPO = (adjustedDailyChange / 24 / 60) * rpo + adjustedBurstChange;
-    const requiredBandwidth = (dataPerRPO * 8) / (rpo * 60); // Convert to Mbps
-
-    // Update chart and output
+    // Update chart
     updateChart(requiredBandwidth);
-    displayBandwidthOutput(requiredBandwidth);
   }
 
   function updateChart(bandwidth) {
     const ctx = document.getElementById("bandwidthChart").getContext("2d");
-
-    // Destroy previous chart instance if it exists
     if (chartInstance) {
       chartInstance.destroy();
     }
 
-    // Create new chart
     chartInstance = new Chart(ctx, {
       type: "doughnut",
       data: {
+        labels: ["Bandwidth (Mbps)", "Remaining"],
         datasets: [{
-          data: [bandwidth, 100 - bandwidth], // Represent bandwidth and unused space
-          backgroundColor: ["#4CAF50", "#E0E0E0"], // Green for bandwidth, gray for unused
-        }],
-        labels: ["Bandwidth (Mbps)", "Remaining"]
+          data: [bandwidth, 100 - bandwidth],
+          backgroundColor: ["#4CAF50", "#E0E0E0"]
+        }]
       },
       options: {
-        responsive: false, // Disable responsive resizing
-        maintainAspectRatio: false, // Allow custom dimensions
-        cutoutPercentage: 80, // Control doughnut hole size
-        tooltips: {
-          callbacks: {
-            label: function (tooltipItem, data) {
-              return (
-                data.labels[tooltipItem.index] +
-                ": " +
-                data.datasets[0].data[tooltipItem.index].toFixed(2) +
-                " Mbps"
-              );
-            }
-          }
-        }
+        responsive: false,
+        cutout: "80%"
       }
     });
   }
 
-  function displayBandwidthOutput(bandwidth) {
-    document.getElementById("bandwidthOutput").innerHTML =
-      `Recommended Bandwidth: <strong>${bandwidth.toFixed(2)} Mbps</strong>`;
-  }
-
-  // Attach the function to the button click
-  document.querySelector("button").addEventListener("click", calculateBandwidth);
+  document.getElementById("calculateBtn").addEventListener("click", calculateBandwidth);
 });
