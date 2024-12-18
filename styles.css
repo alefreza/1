@@ -23,3 +23,9 @@ canvas {
   font-weight: bold;
   color: #333;
 }
+#bandwidthChart {
+  width: 400px;
+  height: 400px;
+  max-width: 100%;
+  max-height: 400px;
+}
