@@ -4,27 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SRM Bandwidth Calculator</title>
+  <!-- Bootstrap CDN for styling -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>SRM Bandwidth Calculator</h1>
-    <form id="bandwidthForm">
-      <label for="vmDataSize">Total VM Data Size (GB):</label>
-      <input type="number" id="vmDataSize" placeholder="Enter Total VM Data Size (GB)" required>
-
-      <label for="changeRate">Daily Change Rate (GB):</label>
-      <input type="number" id="changeRate" placeholder="Enter Daily Change Rate (GB)" required>
-
-      <label for="replicationInterval">Replication Interval (hours):</label>
-      <input type="number" id="replicationInterval" placeholder="Enter Replication Interval (hours)" required>
-
-      <button type="submit">Calculate Bandwidth</button>
+  <div class="container my-5">
+    <h1 class="text-center mb-4">SRM Bandwidth Calculator</h1>
+    <form id="bandwidthCalculator">
+      <div class="form-group">
+        <label for="numVMs">Total Number of VMs to be Replicated</label>
+        <input type="number" class="form-control" id="numVMs" placeholder="Enter number of VMs" required>
+      </div>
+      <div class="form-group">
+        <label for="diskSize">Average Size of Virtual Disks (GB)</label>
+        <input type="number" class="form-control" id="diskSize" placeholder="Enter average disk size" required>
+      </div>
+      <div class="form-group">
+        <label for="changeRate">Daily Data Change Rate (%)</label>
+        <input type="number" class="form-control" id="changeRate" placeholder="Enter change rate" required>
+      </div>
+      <div class="form-group">
+        <label for="rpo">Recovery Point Objective (RPO) in Minutes</label>
+        <input type="number" class="form-control" id="rpo" placeholder="Enter RPO (minutes)" required>
+      </div>
+      <button type="button" class="btn btn-primary btn-block" onclick="calculateBandwidth()">Calculate Bandwidth</button>
     </form>
-
-    <div id="result">
-      <h2>Bandwidth Required:</h2>
-      <p id="bandwidthResult"></p>
+    <div class="result mt-4 text-center" id="result">
+      <!-- Result will be displayed here -->
     </div>
   </div>
 
