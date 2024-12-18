@@ -52,11 +52,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const ctx = chart.ctx;
 
         ctx.restore();
-        const fontSize = (height / 200).toFixed(2);
+        const fontSize = (height / 200).toFixed(1.5);
         ctx.font = fontSize + "em sans-serif";
         ctx.textBaseline = "middle";
 
-        const text = `${bandwidth.toFixed(2)} Mbps`;
+        const text = `${bandwidth.toFixed(1.5)} Mbps`;
         const textX = Math.round((width - ctx.measureText(text).width) / 2);
         const textY = height / 2;
 
