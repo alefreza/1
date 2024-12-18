@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const ctx = chart.ctx;
 
         ctx.restore();
-        const fontSize = (height / 400).toFixed(1);
+        const fontSize = (height / 200).toFixed(1);
         ctx.font = fontSize + "em sans-serif";
         ctx.textBaseline = "middle";
 
