@@ -33,7 +33,7 @@ The tool calculates bandwidth based on the following key parameters. Ensure you 
 
 *RPO (minutes): Recovery Point Objective in minutes, indicating the acceptable time window for data loss (e.g., 15 minutes).
 
-     How To Use
+     How To Use : open below link and enjoy
 
 "https://alefreza.github.io/SRM-Bandwidth-Calculator/"
    
