@@ -33,9 +33,11 @@ The tool calculates bandwidth based on the following key parameters. Ensure you 
 
 *RPO (minutes): Recovery Point Objective in minutes, indicating the acceptable time window for data loss (e.g., 15 minutes).
 
-    How to Use
-    Upon opening the tool, you will be prompted to enter several key parameters that influence the bandwidth calculation.
-    By following these steps, you’ll quickly be able to assess the necessary bandwidth for your vSphere replication setup 
+     How To Use
+
+"https://alefreza.github.io/SRM-Bandwidth-Calculator/"
+   
+
 
 Contributions
 
